@@ -104,7 +104,7 @@ int randomaxis()
 	axis = rand() % 20;
 	return axis;
 }
-void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char CharAux3, char CharAux4) 
+void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char CharAux3, char CharAux4,  char CharAux5) 
 /* A chamada da funcao determina um movimento aleatorio da variavel CharMov, considerando o fato de que nao pode haver colisoes entre CharMov e os personagens do jogo CharAux(1...4). */
 {
 	int mov;
@@ -112,7 +112,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 	switch(mov)
 	{
 		case 0:
-			if(*i == 0 || tabuleiro[*i - 1][*j]  == CharAux1 || tabuleiro[*i - 1][*j] == CharAux2 || tabuleiro[*i - 1][*j] == CharAux3 || tabuleiro[*i - 1][*j] == CharAux4)
+			if(*i == 0 || tabuleiro[*i - 1][*j]  == CharAux1 || tabuleiro[*i - 1][*j] == CharAux2 || tabuleiro[*i - 1][*j] == CharAux3 || tabuleiro[*i - 1][*j] == CharAux4 || tabuleiro[*i - 1][*j] == CharAux5)
 			{
 				break;
 			}
@@ -122,7 +122,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				*i = *i - 1;
 				break;
 		case 1:
-			if(*i == 19 || tabuleiro[*i + 1][*j]  == CharAux1 || tabuleiro[*i + 1][*j] == CharAux2 || tabuleiro[*i + 1][*j] == CharAux3 || tabuleiro[*i + 1][*j] == CharAux4)
+			if(*i == 19 || tabuleiro[*i + 1][*j]  == CharAux1 || tabuleiro[*i + 1][*j] == CharAux2 || tabuleiro[*i + 1][*j] == CharAux3 || tabuleiro[*i + 1][*j] == CharAux4 || tabuleiro[*i + 1][*j] == CharAux5)
 			{
 				break;
 			}
@@ -132,7 +132,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				*i = *i + 1;
 				break;
 		case 2:
-			if(*j == 19 || tabuleiro[*i][*j + 1]  == CharAux1 || tabuleiro[*i][*j + 1] == CharAux2 || tabuleiro[*i][*j + 1] == CharAux3 || tabuleiro[*i][*j + 1] == CharAux4)
+			if(*j == 19 || tabuleiro[*i][*j + 1]  == CharAux1 || tabuleiro[*i][*j + 1] == CharAux2 || tabuleiro[*i][*j + 1] == CharAux3 || tabuleiro[*i][*j + 1] == CharAux4 || tabuleiro[*i][*j + 1] == CharAux5)
 			{
 				break;
 			}
@@ -142,7 +142,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				*j = *j + 1;
 				break;
 		case 3:
-			if(*j == 0 || tabuleiro[*i][*j - 1]  == CharAux1 || tabuleiro[*i][*j - 1] == CharAux2 || tabuleiro[*i][*j - 1] == CharAux3 || tabuleiro[*i][*j - 1] == CharAux3)
+			if(*j == 0 || tabuleiro[*i][*j - 1]  == CharAux1 || tabuleiro[*i][*j - 1] == CharAux2 || tabuleiro[*i][*j - 1] == CharAux3 || tabuleiro[*i][*j - 1] == CharAux4 || tabuleiro[*i][*j - 1] == CharAux5)
 			{
 				break;
 			}
@@ -193,7 +193,7 @@ void randommovb(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char
 				*j = *j + 1;
 				break;
 		case 3:
-			if(*j == 0 || tabuleiro[*i][*j - 1]  == CharAux1 || tabuleiro[*i][*j - 1] == CharAux2 || tabuleiro[*i][*j - 1] == CharAux3 || tabuleiro[*i][*j - 1] == CharAux3)
+			if(*j == 0 || tabuleiro[*i][*j - 1]  == CharAux1 || tabuleiro[*i][*j - 1] == CharAux2 || tabuleiro[*i][*j - 1] == CharAux3 || tabuleiro[*i][*j - 1] == CharAux4)
 			{
 				break;
 			}
@@ -270,23 +270,23 @@ void mapprint(int qtd_mov, int pontos)
 		{
 			if(tabuleiro[i][j] == 'X')
 			{
-				printf(BOLD VERMELHO"%c"NORMAL, tabuleiro[i][j]);	
+				printf(BOLD VERMELHO"%c "NORMAL, tabuleiro[i][j]);	
 			}
 			else if(tabuleiro[i][j] == 'C')
 			{
-				printf(BOLD VERDE"%c" NORMAL, tabuleiro[i][j]);
+				printf(BOLD VERDE"%c " NORMAL, tabuleiro[i][j]);
 			}
 			else if(tabuleiro[i][j] == 'O')
 			{
-				printf(BOLD AZUL "%c" NORMAL, tabuleiro[i][j]);	
+				printf(BOLD AZUL "%c " NORMAL, tabuleiro[i][j]);	
 			}
 			else if(tabuleiro[i][j] == 'B')
 			{
-				printf(BOLD "%c" NORMAL, tabuleiro[i][j]);	
+				printf(BOLD "%c " NORMAL, tabuleiro[i][j]);	
 			}
 			else
 			{
-				printf("%c", tabuleiro[i][j]);
+				printf("%c ", tabuleiro[i][j]);
 			}
 		}
 		printf("\n");
@@ -362,7 +362,7 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 				*CaxisY = *CaxisY - 1;
 				break;
 		default:
-			randommov(CaxisX, CaxisY, 'C', 'X', 'B', 'Q', '0');
+			randommov(CaxisX, CaxisY, 'C', 'X', 'B', 'Q', '0', '0');
 			break;
 	}
 }
@@ -372,9 +372,9 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 	int auxrand;
 	loucuraX = rand() % 3;
 	auxrand = rand() % 2;
-	if(loucuraX = 0)
+	if(loucuraX == 0)
 	{
-		randommov(XaxisX, XaxisY, 'X', 'C', 'B', 'Q', 'O');
+		randommov(XaxisX, XaxisY, 'X', 'C', 'B', 'Q', 'O', 'X'); /* BOTAR X AQUI TAMBEM  */
 	}
 	else
 	{
@@ -384,7 +384,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			{
 				if(auxrand)
 				{
-					if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q')
+					if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY + 1] == 'X')
 					{
 
 					}
@@ -398,7 +398,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 				}
 				else
 				{
-					if(*XaxisX == 19 || tabuleiro[*XaxisX + 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX + 1][*XaxisY] == 'B' || tabuleiro[*XaxisX + 1][*XaxisY] == 'Q')
+					if(*XaxisX == 19 || tabuleiro[*XaxisX + 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX + 1][*XaxisY] == 'B' || tabuleiro[*XaxisX + 1][*XaxisY] == 'Q' || tabuleiro[*XaxisX + 1][*XaxisY] == 'X')
 					{
 			
 					}
@@ -415,7 +415,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			{
 				if(auxrand)
 				{
-					if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q')
+					if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY - 1] == 'X')
 					{
 					
 					}
@@ -429,7 +429,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 				}
 				else
 				{
-					if(*XaxisX == 19 || tabuleiro[*XaxisX + 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX + 1][*XaxisY] == 'B' || tabuleiro[*XaxisX + 1][*XaxisY] == 'Q')
+					if(*XaxisX == 19 || tabuleiro[*XaxisX + 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX + 1][*XaxisY] == 'B' || tabuleiro[*XaxisX + 1][*XaxisY] == 'Q' || tabuleiro[*XaxisX - 1][*XaxisY] == 'X')
 					{
 			
 					}
@@ -444,7 +444,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			}
 			else
 			{
-				if(*XaxisX == 19 || tabuleiro[*XaxisX + 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX + 1][*XaxisY] == 'B' || tabuleiro[*XaxisX + 1][*XaxisY] == 'Q')
+				if(*XaxisX == 19 || tabuleiro[*XaxisX + 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX + 1][*XaxisY] == 'B' || tabuleiro[*XaxisX + 1][*XaxisY] == 'Q' || tabuleiro[*XaxisX + 1][*XaxisY] == 'X')
 				{
 
 				}
@@ -463,7 +463,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			{
 				if(auxrand)
 				{
-					if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q')
+					if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY + 1] == 'X')
 					{
 
 					}
@@ -477,7 +477,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 				}
 				else
 				{
-					if(*XaxisX == 0 || tabuleiro[*XaxisX - 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX - 1][*XaxisY] == 'B' || tabuleiro[*XaxisX - 1][*XaxisY] == 'Q')
+					if(*XaxisX == 0 || tabuleiro[*XaxisX - 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX - 1][*XaxisY] == 'B' || tabuleiro[*XaxisX - 1][*XaxisY] == 'Q' || tabuleiro[*XaxisX - 1][*XaxisY] == 'X')
 					{
 					
 					}
@@ -494,7 +494,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			{
 				if(auxrand)
 				{
-					if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q')
+					if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY - 1] == 'X')
 					{
 					
 					}
@@ -508,7 +508,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 				}
 				else
 				{
-					if(*XaxisX == 0 || tabuleiro[*XaxisX - 1][*XaxisY]  == 'X' || tabuleiro[*XaxisX - 1][*XaxisY] == 'B' || tabuleiro[*XaxisX - 1][*XaxisY] == 'Q')
+					if(*XaxisX == 0 || tabuleiro[*XaxisX - 1][*XaxisY]  == 'X' || tabuleiro[*XaxisX - 1][*XaxisY] == 'B' || tabuleiro[*XaxisX - 1][*XaxisY] == 'Q' || tabuleiro[*XaxisX - 1][*XaxisY] == 'X')
 					{
 					
 					}
@@ -523,7 +523,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			}
 			else
 			{
-				if(*XaxisX == 0 || tabuleiro[*XaxisX - 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX - 1][*XaxisY] == 'B' || tabuleiro[*XaxisX - 1][*XaxisY] == 'Q')
+				if(*XaxisX == 0 || tabuleiro[*XaxisX - 1][*XaxisY]  == 'O' || tabuleiro[*XaxisX - 1][*XaxisY] == 'B' || tabuleiro[*XaxisX - 1][*XaxisY] == 'Q' || tabuleiro[*XaxisX - 1][*XaxisY] == 'X')
 				{
 				
 				}
@@ -540,7 +540,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 		{
 			if(CaxisY > *XaxisY)
 			{
-				if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q')
+				if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY + 1] == 'X')
 				{
 
 				}
@@ -554,7 +554,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
 			}
 			else
 			{
-				if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q')
+				if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY - 1] == 'X')
 				{
 				
 				}
@@ -593,21 +593,39 @@ void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup)
 	{
 		for(i = 0; i < 8; i++)
 		{
+			if(QaxisX + i == 19)
+			{
+				break;
+			}
+			else
 			tabuleiro[QaxisX + i][QaxisY] = '#';
 		}
 		for(i = 0; i < 8; i++)
 		{
+			if(QaxisX + i == 19)
+			{
+				break;
+			}
 			tabuleiro[QaxisX - i][QaxisY] = '#';
 		}
 		for(i = 0; i < 8; i++)
 		{
+			if(QaxisX + i == 19)
+			{
+				break;
+			}
 			tabuleiro[QaxisX][QaxisY + i] = '#';
 		}
 		for(i = 0; i < 8; i++)
 		{
+			if(QaxisX + i == 19)
+			{
+				break;
+			}
 			tabuleiro[QaxisX][QaxisY - i] = '#';
 		}
 		*Qup = 0;
+		printf("EXPLODIU\n");
 	}
 }
 void backtonormalQ()
@@ -619,7 +637,7 @@ void backtonormalQ()
 		{
 			if(tabuleiro[i][j] == '#')
 			{
-				tabuleiro[i][j] == '.';
+				tabuleiro[i][j] = '.';
 			}
 		}
 	}
@@ -634,6 +652,7 @@ void jogar()
 		mapprint(qtd_mov, pontos);
 		if(Qexplos)
 		{
+			printf("ENTROU!1!\n");
 			backtonormalQ(QaxisX, QaxisY);
 			Qexplos = 0;
 		}
@@ -653,9 +672,10 @@ void jogar()
 		{
 			game_over = 1;
 		}
-		indicespawnQ = rand() % 3;
+		indicespawnQ = rand() % 5;
 		if(tempo >= 4 && indicespawnQ == 0 && !Qup)
 		{
+			printf("SPANWO\n");
 			spawnQ(&QaxisX, &QaxisY);
 			Qup = 1;
 		}
@@ -709,4 +729,3 @@ int main()
 
 	return 0;
 }
-
