@@ -233,26 +233,26 @@ void mapcreate(int* CaxisX, int* CaxisY)
 	*CaxisX = randomaxis();
 	*CaxisY = randomaxis();
 	tabuleiro[*CaxisX][*CaxisY] = 'C';
-	for(k = 0; k < 4; k++)
+	for(k = 0; k < 4; k++)/* Salva eixos randomicos no vetor para serem lidos de 2 em 2 como eixos X e Y do plano da matriz de jogo */
 	{
 		Xaxis = randomaxis();
 		vetaxisX[k] = Xaxis;
 	}
-	for(quantX = 0; quantX < 4; quantX += 2)
+	for(quantX = 0; quantX < 4; quantX += 2) /* Spawna 'X' */
 	{
 		tabuleiro[vetaxisX[quantX]][vetaxisX[quantX + 1]] = 'X';
 	}
-	for(k = 0; k < 6; k++)
+	for(k = 0; k < 6; k++) /* Salva eixos randomicos no vetor para serem lidos de 2 em 2 como eixos X e Y do plano da matriz de jogo */
 	{
 		Baxis = randomaxis();
 		vetaxisB[k] = Baxis;
 	}
-	for(quantB = 0; quantB < 6; quantB += 2)
+	for(quantB = 0; quantB < 6; quantB += 2) /* Spawna 'B' e inicializa tempo para usar no rastro com uma matriz auxiliar*/
 	{
 		tabuleiro[vetaxisB[quantB]][vetaxisB[quantB + 1]] = 'B';
 		temporario[vetaxisB[quantB]][vetaxisB[quantB + 1]] = tempo;
 	}
-	for(quantO = 0; quantO < 2; quantO++)
+	for(quantO = 0; quantO < 3; quantO++) /* Spawna 'O' */
 	{
 		OaxisX = randomaxis();
 		OaxisY = randomaxis();
@@ -366,15 +366,23 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 			break;
 	}
 }
-void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over)
+void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* movloucura)
 {
 	/* ARRUMAR SOBREPOSIÇÃO DE X SOBRE OS OUTRO AMIGUINHO */
 	int auxrand;
-	loucuraX = rand() % 3;
+	loucuraX = rand() % 10;
 	auxrand = rand() % 2;
-	if(loucuraX == 0)
+	if(loucuraX == 0 || *movloucura < 5 )
 	{
-		randommov(XaxisX, XaxisY, 'X', 'C', 'B', 'Q', 'O', 'X'); /* BOTAR X AQUI TAMBEM  */
+		if(loucuraX == 0)
+		{
+			*movloucura = 0;
+			randommov(XaxisX, XaxisY, 'X', 'C', 'B', 'Q', 'O', 'X');
+			(*movloucura)++;
+		}
+		else
+		randommov(XaxisX, XaxisY, 'X', 'C', 'B', 'Q', 'O', 'X');
+		(*movloucura)++;
 	}
 	else
 	{
@@ -584,17 +592,20 @@ void spawnQ(int* QaxisX, int* QaxisY)
 	*QaxisY = rand() % 20;
 	tabuleiro[*QaxisX][*QaxisY] = 'Q';
 }
-void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup)
+void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup, int tempoB, int randexplosao, int* Qexplos)
 {
 
-	int i, randexplosao;
-	randexplosao = RAND;
-	if(randexplosao == 4)
+	int i;
+	if(tempoB == randexplosao)
 	{
 		for(i = 0; i < 8; i++)
 		{
-			if(QaxisX + i == 19)
+			if(QaxisX + i == 20 || tabuleiro[QaxisX + i][QaxisY] == 'X' || tabuleiro[QaxisX + i][QaxisY] == 'B' || tabuleiro[QaxisX + i][QaxisY] == 'O' || tabuleiro[QaxisX + i][QaxisY] == 'C')
 			{
+				if(tabuleiro[QaxisX + i][QaxisY] == 'C')
+				{
+					*game_over = 1;
+				}
 				break;
 			}
 			else
@@ -602,30 +613,45 @@ void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup)
 		}
 		for(i = 0; i < 8; i++)
 		{
-			if(QaxisX + i == 19)
+			if(QaxisX - i == -1 || tabuleiro[QaxisX - i][QaxisY] == 'X' || tabuleiro[QaxisX - i][QaxisY] == 'B' || tabuleiro[QaxisX - i][QaxisY] == 'O' || tabuleiro[QaxisX - i][QaxisY] == 'C')
 			{
+				if(tabuleiro[QaxisX - i][QaxisY] == 'C')
+				{
+					*game_over = 1;
+				}
 				break;
 			}
+			else
 			tabuleiro[QaxisX - i][QaxisY] = '#';
 		}
 		for(i = 0; i < 8; i++)
 		{
-			if(QaxisX + i == 19)
+			if(QaxisY + i == 20 || tabuleiro[QaxisX][QaxisY + i] == 'X' || tabuleiro[QaxisX][QaxisY + i] == 'B' || tabuleiro[QaxisX][QaxisY + i] == 'O' || tabuleiro[QaxisX][QaxisY + i] == 'C') 
 			{
+				if(tabuleiro[QaxisX][QaxisY + i] == 'C')
+				{
+					*game_over = 1;
+				}
 				break;
 			}
+			else
 			tabuleiro[QaxisX][QaxisY + i] = '#';
 		}
 		for(i = 0; i < 8; i++)
 		{
-			if(QaxisX + i == 19)
+			if(QaxisY - i == -1 || tabuleiro[QaxisX][QaxisY - i] == 'X' || tabuleiro[QaxisX][QaxisY - i] == 'B' || tabuleiro[QaxisX][QaxisY - i] == 'O' || tabuleiro[QaxisX][QaxisY - i] == 'C')
 			{
+				if(tabuleiro[QaxisX][QaxisY - i] == 'C')
+				{
+					*game_over = 1;
+				}
 				break;
 			}
+			else
 			tabuleiro[QaxisX][QaxisY - i] = '#';
 		}
 		*Qup = 0;
-		printf("EXPLODIU\n");
+		*Qexplos = 1;
 	}
 }
 void backtonormalQ()
@@ -644,7 +670,7 @@ void backtonormalQ()
 }
 void jogar()
 {	
-	int game_over = 0, qtd_mov = 250, pontos = 0, contponto = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY;
+	int game_over = 0, qtd_mov = 250, pontos = 0, contponto = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY, movloucura = 5, randexplosao, tempoB;
 	mapcreate(&CaxisX, &CaxisY);
 	while(!game_over && qtd_mov >= 0)
 	{
@@ -652,40 +678,40 @@ void jogar()
 		mapprint(qtd_mov, pontos);
 		if(Qexplos)
 		{
-			printf("ENTROU!1!\n");
-			backtonormalQ(QaxisX, QaxisY);
-			Qexplos = 0;
+			backtonormalQ(QaxisX, QaxisY); /* Muda os '#' por '.' de novo */
+			Qexplos = 0; /* Volta o indice de explosao a 0 pra não rodar quando não tiver explodido */
 		}
-		movC(&CaxisX, &CaxisY, &pontos, &contponto);
+		movC(&CaxisX, &CaxisY, &pontos, &contponto); /* Move C e vê se ele pega 'O' */
 		pontos++;
-		for(quantX = 0; quantX < 4; quantX += 2)
+		for(quantX = 0; quantX < 4; quantX += 2)/* Movimenta todos os X's baseados nas posições do vetor criado com suas respectivas posições */
 		{
-			movX(&vetaxisX[quantX], &vetaxisX[quantX + 1], CaxisX, CaxisY, &game_over);
+			movX(&vetaxisX[quantX], &vetaxisX[quantX + 1], CaxisX, CaxisY, &game_over, &movloucura);
 		}
-		for(quantB = 0; quantB < 6; quantB += 2)
+		for(quantB = 0; quantB < 6; quantB += 2)/* Movimenta todos os B's baseados nas posições do vetor criado com suas respectivas posições */
 		{
-			movB(&vetaxisB[quantB], &vetaxisB[quantB + 1]); /* TEM Q FAZER UM VETOR PRA GUARDAR A POSIÇÃO DO RASTRO */
+			movB(&vetaxisB[quantB], &vetaxisB[quantB + 1]);
 		}
 		tempo++;
 		qtd_mov--;
-		if(contponto == 2)
+		if(contponto == 3) /* Vê se pegou todos os pontos do tabuleiro */
 		{
 			game_over = 1;
 		}
 		indicespawnQ = rand() % 5;
-		if(tempo >= 4 && indicespawnQ == 0 && !Qup)
+		if(tempo >= 4 && indicespawnQ == 0 && !Qup)/* Checa pra ver se tem Q, se não tiver spawna um quando indice igual a 0 */ 
 		{
-			printf("SPANWO\n");
-			spawnQ(&QaxisX, &QaxisY);
-			Qup = 1;
+			tempoB = 0; /* Inicializa o tempo de duracao de B em rodadas */
+			spawnQ(&QaxisX, &QaxisY); /* Spawna Q */
+			Qup = 1; /* Mostra que Q tá up */ 
+			randexplosao = RAND; /* Diz quando vai explodir (6 +/- 4 rodadas) */
 		}
-		if(Qup)
+		if(Qup) /* Checa se pode explodir baseado num contador de jogadas tempoB  */
 		{
-			explosQ(QaxisX, QaxisY, &game_over, &Qup);
-			Qexplos = 1;
+			explosQ(QaxisX, QaxisY, &game_over, &Qup, tempoB, randexplosao, &Qexplos); /* Explode Q */
+			tempoB++; /* Conta Q pra ver se ja pode explodir */
 		}
 	}
-	if(game_over)
+	if(game_over || qtd_mov <= 0)
 	{
 		mapprint(qtd_mov, pontos);
 		printf("GAME OVER.\n");
