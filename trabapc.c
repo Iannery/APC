@@ -6,12 +6,13 @@ Algoritmos e Programação de Computadores – 2/2017
 Aluno(a): Ian Nery Bandeira
 Matricula: 17/0144739
 Turma: A
-Versão do compilador: gcc (Ubuntu 6.3.0-12ubuntu2) 6.3.0 20170406
-Descricao: < breve descricao do programa > */
+Versão do compilador: gcc version 7.2.0 (Ubuntu 7.2.0-8ubuntu3)
+Descricao: Um jogo de tabuleiro similar a PacMan no qual o personagem C deve pegar todos os O's e desviar dos X's que o seguem e dos Q's que explodem.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-/*valor médio que a bomba levará para explodir (turnos)*/
+/*valor medio que a bomba levará para explodir (turnos)*/
 #define MEDIA_TEMPO 6
 /* erro da medida de tempo que a bomba levará para explodir (turnos)*/
 #define ERRO_TEMPO 4
@@ -42,10 +43,10 @@ Descricao: < breve descricao do programa > */
 #define CIANO		"\x1B[36m"
 #define NORMAL 	    "\x1B[0m"
 char tabuleiro[20][20];
-int temporario[20][20];
+int temporario[20][20];/* Matriz temporaria pra guardar o tempo, que auxilia a guardar o rastro de B */
 int altura = 20, largura = 20;
-int vetaxisX[100];
-int vetaxisB[100];
+int vetaxisX[100]; /* Vetor com os eixos de X, dois a dois */
+int vetaxisB[100]; /* Vetor com os eixos de B, dois a dois */
 int quantO, quantB, quantX;
 int tamanhoB, loucuraX, tamanhoQ;
 int tempo = 1;
@@ -70,6 +71,7 @@ void apres()
     getchar();
 }
 void menu()
+/* Menu do jogo */
 {
 	CLEAR;
 	int Num_Menu;
@@ -105,7 +107,7 @@ int randomaxis()
 	return axis;
 }
 void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char CharAux3, char CharAux4,  char CharAux5) 
-/* A chamada da funcao determina um movimento aleatorio da variavel CharMov, considerando o fato de que nao pode haver colisoes entre CharMov e os personagens do jogo CharAux(1...4). */
+/* A chamada da funcao determina um movimento aleatorio da variavel CharMov, considerando o fato de que nao pode haver colisoes entre CharMov e os personagens do jogo CharAux(1...5). */
 {
 	int mov;
 	mov = rand() % 4;
@@ -117,6 +119,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				break;
 			}
 			else
+				/* MOVIMENTO PARA NORTE */
 				tabuleiro[*i - 1][*j] = CharMov;
 				tabuleiro[*i][*j] = '.';
 				*i = *i - 1;
@@ -127,6 +130,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				break;
 			}
 			else
+				/* MOVIMENTO PARA SUL */
 				tabuleiro[*i + 1][*j] = CharMov;
 				tabuleiro[*i][*j] = '.';
 				*i = *i + 1;
@@ -137,6 +141,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				break;
 			}
 			else
+				/* MOVIMENTO PARA LESTE */
 				tabuleiro[*i][*j + 1] = CharMov;
 				tabuleiro[*i][*j] = '.';
 				*j = *j + 1;
@@ -147,6 +152,7 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 				break;
 			}
 			else
+				/* MOVIMENTO PARA OESTE */
 				tabuleiro[*i][*j - 1] = CharMov;
 				tabuleiro[*i][*j] = '.';
 				*j = *j - 1;
@@ -156,7 +162,6 @@ void randommov(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char 
 void randommovb(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char CharAux3, char CharAux4) 
 /* A chamada da funcao determina um movimento aleatorio da variavel CharMov, considerando o fato de que nao pode haver colisoes entre CharMov e os personagens do jogo CharAux(1...4). */
 {
-	int vetaux[20];
 	int mov;
 	int i1, j1;
 	mov = rand() % 4;
@@ -205,7 +210,6 @@ void randommovb(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char
 	}
 	if(tempo >= 6)
 	{
-		// printf("%d\n", tempo);
 		for(i1 = 0; i1 < 20; i1++)
 		{
 			for(j1 = 0; j1 < 20; j1++)
@@ -218,10 +222,17 @@ void randommovb(int* i, int* j, char CharMov, char CharAux1, char CharAux2, char
 		}
 	}
 }	
-void mapcreate(int* CaxisX, int* CaxisY)
-/* Cria o mapa no qual o jogo rodará. */
+void spawnO()
 {
-	int Xaxis, Baxis, OaxisX, OaxisY, QaxisX, QaxisY;
+	int OaxisX, OaxisY;
+	OaxisX = randomaxis();
+	OaxisY = randomaxis();
+	tabuleiro[OaxisX][OaxisY] = 'O';
+}
+void mapcreate(int* CaxisX, int* CaxisY)
+/* Cria o mapa no qual o jogo rodara. */
+{
+	int Xaxis, Baxis;
 	int i, j, k;
 	for(i = 0; i < altura; i++)
 	{
@@ -252,12 +263,7 @@ void mapcreate(int* CaxisX, int* CaxisY)
 		tabuleiro[vetaxisB[quantB]][vetaxisB[quantB + 1]] = 'B';
 		temporario[vetaxisB[quantB]][vetaxisB[quantB + 1]] = tempo;
 	}
-	for(quantO = 0; quantO < 3; quantO++) /* Spawna 'O' */
-	{
-		OaxisX = randomaxis();
-		OaxisY = randomaxis();
-		tabuleiro[OaxisX][OaxisY] = 'O';
-	}
+	spawnO();
 }
 void mapprint(int qtd_mov, int pontos)
 /* Mostra na tela o mapa. */
@@ -292,8 +298,8 @@ void mapprint(int qtd_mov, int pontos)
 		printf("\n");
 	}
 }
-void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
-/* A funcao determina o movimento de C, utilizando das teclas WASD do teclado. Ao digitar algo diferente de WASD, o movimento de C é aleatorio. */
+void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto_O)
+/* A funcao determina o movimento de C, utilizando das teclas WASD do teclado. Ao digitar algo diferente de "wasd", o movimento de C eh aleatorio. */
 {
 	char Direcao;
 	scanf(" %c", &Direcao);
@@ -309,7 +315,8 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 				if(tabuleiro[*CaxisX - 1][*CaxisY] == 'O')
 				{
 					*pontos = *pontos + 50;
-					(*contponto)++;
+					(*contponto_O)++;
+					spawnO();
 				}
 				tabuleiro[*CaxisX - 1][*CaxisY] = 'C';
 				tabuleiro[*CaxisX][*CaxisY] = '.';
@@ -325,7 +332,8 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 				if(tabuleiro[*CaxisX + 1][*CaxisY] == 'O')
 				{
 					*pontos = *pontos + 50;
-					(*contponto)++;
+					(*contponto_O)++;
+					spawnO();
 				}
 				tabuleiro[*CaxisX + 1][*CaxisY] = 'C';
 				tabuleiro[*CaxisX][*CaxisY] = '.';
@@ -340,7 +348,8 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 				if(tabuleiro[*CaxisX][*CaxisY + 1] == 'O')
 				{
 					*pontos = *pontos + 50;
-					(*contponto)++;
+					(*contponto_O)++;
+					spawnO();
 				}
 				tabuleiro[*CaxisX][*CaxisY + 1] = 'C';
 				tabuleiro[*CaxisX][*CaxisY] = '.';
@@ -355,7 +364,8 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 				if(tabuleiro[*CaxisX][*CaxisY - 1] == 'O')
 				{
 					*pontos = *pontos + 50;
-					(*contponto)++;
+					(*contponto_O)++;
+					spawnO();
 				}
 				tabuleiro[*CaxisX][*CaxisY - 1] = 'C';
 				tabuleiro[*CaxisX][*CaxisY] = '.';
@@ -366,13 +376,13 @@ void movC(int* CaxisX, int* CaxisY, int* pontos, int* contponto)
 			break;
 	}
 }
-void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* movloucura)
+void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* movloucura) 
+/* Move 'X' no mapa */
 {
-	/* ARRUMAR SOBREPOSIÇÃO DE X SOBRE OS OUTRO AMIGUINHO */
-	int auxrand;
+	int movrand_auxiliar;
 	loucuraX = rand() % 10;
-	auxrand = rand() % 2;
-	if(loucuraX == 0 || *movloucura < 5 )
+	movrand_auxiliar = rand() % 2;
+	if(loucuraX == 0 || *movloucura < 5 ) /* Entra em estado de loucura por 5 rodadas. */
 	{
 		if(loucuraX == 0)
 		{
@@ -390,7 +400,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* 
 		{
 			if(CaxisY > *XaxisY)
 			{
-				if(auxrand)
+				if(movrand_auxiliar)
 				{
 					if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY + 1] == 'X')
 					{
@@ -421,7 +431,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* 
 			}
 			else if(CaxisY < *XaxisY)
 			{
-				if(auxrand)
+				if(movrand_auxiliar)
 				{
 					if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY - 1] == 'X')
 					{
@@ -469,7 +479,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* 
 		{
 			if(CaxisY > *XaxisY)
 			{
-				if(auxrand)
+				if(movrand_auxiliar)
 				{
 					if(*XaxisY == 19 || tabuleiro[*XaxisX][*XaxisY + 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY + 1] == 'B' || tabuleiro[*XaxisX][*XaxisY + 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY + 1] == 'X')
 					{
@@ -500,7 +510,7 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* 
 			}
 			else if(CaxisY < *XaxisY)
 			{
-				if(auxrand)
+				if(movrand_auxiliar)
 				{
 					if(*XaxisY == 0 || tabuleiro[*XaxisX][*XaxisY - 1]  == 'O' || tabuleiro[*XaxisX][*XaxisY - 1] == 'B' || tabuleiro[*XaxisX][*XaxisY - 1] == 'Q' || tabuleiro[*XaxisX][*XaxisY - 1] == 'X')
 					{
@@ -582,11 +592,13 @@ void movX(int* XaxisX,int* XaxisY, int CaxisX, int CaxisY, int* game_over, int* 
 	}
 }
 void movB(int* BaxisX, int* BaxisY)
+ /* Move 'B' no mapa */
 {
 	randommovb(BaxisX, BaxisY, 'B', 'C', 'X', 'O', 'Q');
 
 }
-void spawnQ(int* QaxisX, int* QaxisY)
+void spawnQ(int* QaxisX, int* QaxisY) 
+/* Spawna 'Q' no mapa */
 {
 	*QaxisX = rand() % 20;
 	*QaxisY = rand() % 20;
@@ -655,6 +667,7 @@ void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup, int tempoB, int r
 	}
 }
 void backtonormalQ()
+/* Percorre o tabuleiro e muda os '#' por '.' */
 {
 	int i, j;
 	for(i = 0; i < 20; i++)
@@ -670,7 +683,7 @@ void backtonormalQ()
 }
 void jogar()
 {	
-	int game_over = 0, qtd_mov = 250, pontos = 0, contponto = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY, movloucura = 5, randexplosao, tempoB;
+	int game_over = 0, qtd_mov = 250, pontos = 0, contponto_O = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY, movloucura = 5, randexplosao, tempoB;
 	mapcreate(&CaxisX, &CaxisY);
 	while(!game_over && qtd_mov >= 0)
 	{
@@ -681,8 +694,8 @@ void jogar()
 			backtonormalQ(QaxisX, QaxisY); /* Muda os '#' por '.' de novo */
 			Qexplos = 0; /* Volta o indice de explosao a 0 pra não rodar quando não tiver explodido */
 		}
-		movC(&CaxisX, &CaxisY, &pontos, &contponto); /* Move C e vê se ele pega 'O' */
-		pontos++;
+		movC(&CaxisX, &CaxisY, &pontos, &contponto_O); /* Move C e vê se ele pega 'O' */
+		pontos--;
 		for(quantX = 0; quantX < 4; quantX += 2)/* Movimenta todos os X's baseados nas posições do vetor criado com suas respectivas posições */
 		{
 			movX(&vetaxisX[quantX], &vetaxisX[quantX + 1], CaxisX, CaxisY, &game_over, &movloucura);
@@ -693,7 +706,7 @@ void jogar()
 		}
 		tempo++;
 		qtd_mov--;
-		if(contponto == 3) /* Vê se pegou todos os pontos do tabuleiro */
+		if(contponto_O == 3) /* Vê se pegou todos os pontos do tabuleiro */
 		{
 			game_over = 1;
 		}
@@ -702,13 +715,13 @@ void jogar()
 		{
 			tempoB = 0; /* Inicializa o tempo de duracao de B em rodadas */
 			spawnQ(&QaxisX, &QaxisY); /* Spawna Q */
-			Qup = 1; /* Mostra que Q tá up */ 
+			Qup = 1; /* Mostra que Q esta up */ 
 			randexplosao = RAND; /* Diz quando vai explodir (6 +/- 4 rodadas) */
 		}
 		if(Qup) /* Checa se pode explodir baseado num contador de jogadas tempoB  */
 		{
 			explosQ(QaxisX, QaxisY, &game_over, &Qup, tempoB, randexplosao, &Qexplos); /* Explode Q */
-			tempoB++; /* Conta Q pra ver se ja pode explodir */
+			tempoB++; /* Conta Q pra ver se ja pode explodir com base em randexplosao*/
 		}
 	}
 	if(game_over || qtd_mov <= 0)
@@ -724,11 +737,13 @@ void jogar()
 	menu();
 }
 void configuracoes()
+/* WIP */
 {
 	CLEAR;
 	menu();
 }
 void ranking()
+/* WIP */
 {
 	CLEAR;
 	menu();
@@ -736,7 +751,7 @@ void ranking()
 void instrucoes()
 {
 	CLEAR;
-	printf("O jogo CMan e um jogo cujo objetivo eh coletar todos os pontos O no menor numero de jogadas possivel, sem ser morto pelos inimigos X ou explodidos pela bomba Q.\n \nPersonagens do jogo: \n \n- C : Avatar do jogador, pode se mover para norte, oeste, sul e leste, utilizando dos controles W, A, S, D; respectivamente.\nO avatar nao pode ficar parado durante um turno e caso seja utilizada uma tecla diferente das Padroes de movimento, sera apresentada uma mensagem de erro e realizado um movimento aleatorio.\n \n- X : Inimigo do jogador, persegue o avatar e caso se encontrem, o personagem morrera e o jogo sera finalizado.\nPersegue o jogador, exceto quando esta em frenesi, quando tal se move aleatoriamente na area de jogo.\n \n- B : Inimigo Passivo, o qual deixa um rastro de padrao 2 quadros por onde esse se move, sempre aleatorio. Impede a passagem do jogador.\n \n- O : Pontos de jogo, perseguidos pelo jogador para a finalizacao do jogo.\n \n- Q : Inimigo bomba, aparece aleatoriamente no tabuleiro durante o jogo a cada certo período de tempo, e apos um certo tempo explode matando o jogador caso ele esteja a area de explosao, cuja area e ocupada por 8 posicoes do tabuleiro, por default.\n \n \n");
+	printf("O jogo CMan e um jogo cujo objetivo eh coletar todos os pontos O no menor numero de jogadas possivel, sem ser morto pelos inimigos X ou explodidos pela bomba Q; sendo que a cada movimento se perde um ponto e a cada captura de O se ganha 50 pontos.\n \nPersonagens do jogo: \n \n- C : Avatar do jogador, pode se mover para norte, oeste, sul e leste, utilizando dos controles w, a, s, d; respectivamente.\nO avatar nao pode ficar parado durante um turno e caso seja utilizada uma tecla diferente das Padroes de movimento, sera apresentada uma mensagem de erro e realizado um movimento aleatorio.\n \n- X : Inimigo do jogador, persegue o avatar e caso se encontrem, o personagem morrera e o jogo sera finalizado.\nPersegue o jogador, exceto quando esta em frenesi, quando tal se move aleatoriamente na area de jogo.\n \n- B : Inimigo Passivo, o qual deixa um rastro de padrao 2 quadros por onde esse se move, sempre aleatorio. Impede a passagem do jogador.\n \n- O : Pontos de jogo, perseguidos pelo jogador para a finalizacao do jogo.\n \n- Q : Inimigo bomba, aparece aleatoriamente no tabuleiro durante o jogo a cada certo período de tempo, e apos um certo tempo explode matando o jogador caso ele esteja a area de explosao, cuja area e ocupada por 8 posicoes do tabuleiro, por default.\n \n \n");
 	printf("Pressione enter para voltar ao menu:\n");
 	getchar();
 	getchar();
@@ -745,7 +760,7 @@ void instrucoes()
 void sair()
 {
 	CLEAR;
-	printf("E isso pessoal, tamo juntissimo\n");
+	printf("Obrigado por jogar " BOLD "Cman, o comedor de O's\n" NORMAL );
 }
 int main()
 {
