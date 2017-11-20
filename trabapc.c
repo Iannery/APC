@@ -604,11 +604,11 @@ void spawnQ(int* QaxisX, int* QaxisY)
 	*QaxisY = rand() % 20;
 	tabuleiro[*QaxisX][*QaxisY] = 'Q';
 }
-void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup, int tempoB, int randexplosao, int* Qexplos)
+void explosQ(int QaxisX, int QaxisY, int* game_over, int* Qup, int tempoQ, int randexplosao, int* Qexplos)
 {
 
 	int i;
-	if(tempoB == randexplosao)
+	if(tempoQ == randexplosao)
 	{
 		for(i = 0; i < 8; i++)
 		{
@@ -683,7 +683,7 @@ void backtonormalQ()
 }
 void jogar()
 {	
-	int game_over = 0, qtd_mov = 250, pontos = 0, contponto_O = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY, movloucura = 5, randexplosao, tempoB;
+	int game_over = 0, qtd_mov = 250, pontos = 0, contponto_O = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY, movloucura = 5, randexplosao, tempoQ;
 	mapcreate(&CaxisX, &CaxisY);
 	while(!game_over && qtd_mov >= 0)
 	{
@@ -713,15 +713,15 @@ void jogar()
 		indicespawnQ = rand() % 5;
 		if(tempo >= 4 && indicespawnQ == 0 && !Qup)/* Checa pra ver se tem Q, se não tiver spawna um quando indice igual a 0 */ 
 		{
-			tempoB = 0; /* Inicializa o tempo de duracao de B em rodadas */
+			tempoQ = 0; /* Inicializa o tempo de duracao de B em rodadas */
 			spawnQ(&QaxisX, &QaxisY); /* Spawna Q */
 			Qup = 1; /* Mostra que Q esta up */ 
 			randexplosao = RAND; /* Diz quando vai explodir (6 +/- 4 rodadas) */
 		}
-		if(Qup) /* Checa se pode explodir baseado num contador de jogadas tempoB  */
+		if(Qup) /* Checa se pode explodir baseado num contador de jogadas tempoQ  */
 		{
-			explosQ(QaxisX, QaxisY, &game_over, &Qup, tempoB, randexplosao, &Qexplos); /* Explode Q */
-			tempoB++; /* Conta Q pra ver se ja pode explodir com base em randexplosao*/
+			explosQ(QaxisX, QaxisY, &game_over, &Qup, tempoQ, randexplosao, &Qexplos); /* Explode Q */
+			tempoQ++; /* Conta Q pra ver se ja pode explodir com base em randexplosao*/
 		}
 	}
 	if(game_over || qtd_mov <= 0)
