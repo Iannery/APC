@@ -42,6 +42,10 @@ Descricao: Um jogo de tabuleiro similar a PacMan no qual o personagem C deve peg
 #define MAGENTA	    "\x1B[35m"
 #define CIANO		"\x1B[36m"
 #define NORMAL 	    "\x1B[0m"
+typedef struct{
+	char nome[30];
+	int pontosranking;
+} ranking;
 char tabuleiro[20][20];
 int temporario[20][20];/* Matriz temporaria pra guardar o tempo, que auxilia a guardar o rastro de B */
 int altura = 20, largura = 20;
@@ -685,6 +689,12 @@ void jogar()
 {	
 	int game_over = 0, qtd_mov = 250, pontos = 0, contponto_O = 0, Qup = 0, Qexplos = 0, indicespawnQ, CaxisX, CaxisY, QaxisX, QaxisY, movloucura = 5, randexplosao, tempoQ;
 	mapcreate(&CaxisX, &CaxisY);
+	FILE *fp;
+	fp = fopen("ranking.bin", "r+b");
+ 	if(fp == NULL)
+ 	{
+ 		fp = fopen(nomearq, "wb");
+	}
 	while(!game_over && qtd_mov >= 0)
 	{
 		CLEAR;
@@ -729,6 +739,8 @@ void jogar()
 		mapprint(qtd_mov, pontos);
 		printf("GAME OVER.\n");
 		printf("Voce adquiriu %d pontos em %d jogadas.\n\n", pontos, 250 - qtd_mov);
+		printf("Digite seu nome:\n");
+		
 		printf("Pressione enter para voltar ao menu.\n");
 		getchar();
 		getchar();
@@ -746,6 +758,15 @@ void ranking()
 /* WIP */
 {
 	CLEAR;
+	FILE *fp;
+	ranking ranking;
+	printf("NOME\tPONTOS\n");
+	fopen("ranking.bin", "rb");
+	while(fread(&ranking, sizeof(ranking), 1, fp) != 0)
+	{
+		printf("%s\t%d\n", ranking.nome[i], ranking.pontosranking[i]);
+	}	
+
 	menu();
 }
 void instrucoes()
